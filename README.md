@@ -13,14 +13,14 @@
 
 Clarity helps users journal their thoughts and track emotions while keeping all data on-device. An emotion classifier is trained locally using user-provided labels and improved globally through Federated Learning — no raw data ever leaves the device.
 
-## 🧠 The FL Pipeline
+## 🧠 The Proposed FL Pipeline
 
 1. **Write** — User journals their thoughts freely
 2. **Label** — Post-entry reflection: user selects up to 2 emotion labels from 10 categories
 3. **Train** — On-device text classifier (TinyBERT + multi-label classification head) trains on the (text, labels) pair
 4. **FL Sync** — Only model weight deltas are sent to the Flower server for FedAvg aggregation with differential privacy
 
-## Features
+## Proposed Features
 
 - **Adaptive Theme Engine** — UI colors, ambient orbs, and avatar expression morph based on detected emotion
 - **On-Device Emotion Detection** — Real-time keyword-based classifier analyzes journal text as you type
@@ -37,16 +37,6 @@ Clarity helps users journal their thoughts and track emotions while keeping all 
 
 - All journal text stays on-device (localStorage in demo, encrypted local DB in production)
 - Only model weight updates (gradients) are shared via Flower FL
-- Differential privacy noise is applied to weight updates before transmission
+- Differential privacy noise will be applied to weight updates before transmission
 - Users can toggle FL, emotion detection, and DP independently
 - Full data export and deletion capabilities
-
-## 🛠 Tech Stack
-
-| Component | Technology |
-|----------|-------------|
-| Frontend | Vanilla HTML/CSS/JS |
-| On-device ML | TinyBERT (simulated in demo) |
-| FL Framework | Flower (simulated in demo) |
-| Aggregation | FedAvg with DP |
-| Persistence | localStorage |
