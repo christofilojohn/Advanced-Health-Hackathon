@@ -8,7 +8,8 @@
   <li>Clarity Web Interface: For text analysis, voice-to-text feature, nearest GP locator and Agentic Email Management.</li>
   <li>Mental Health Analyzer and Classifier integrating federated learning for user data privacy.</li>
 </ol>
-## 🎯 What It Does
+
+## What It Does
 
 Clarity helps users journal their thoughts and track emotions while keeping all data on-device. An emotion classifier is trained locally using user-provided labels and improved globally through Federated Learning — no raw data ever leaves the device.
 
@@ -19,7 +20,7 @@ Clarity helps users journal their thoughts and track emotions while keeping all 
 3. **Train** — On-device text classifier (TinyBERT + multi-label classification head) trains on the (text, labels) pair
 4. **FL Sync** — Only model weight deltas are sent to the Flower server for FedAvg aggregation with differential privacy
 
-## ✨ Features
+## Features
 
 - **Adaptive Theme Engine** — UI colors, ambient orbs, and avatar expression morph based on detected emotion
 - **On-Device Emotion Detection** — Real-time keyword-based classifier analyzes journal text as you type
@@ -32,7 +33,7 @@ Clarity helps users journal their thoughts and track emotions while keeping all 
 - **Data Export** — Full JSON export of all entries
 - **Onboarding** — 3-slide intro explaining the app, FL pipeline, and personalization
 
-## 🔒 Privacy Architecture
+## Privacy Architecture
 
 - All journal text stays on-device (localStorage in demo, encrypted local DB in production)
 - Only model weight updates (gradients) are shared via Flower FL
@@ -49,17 +50,3 @@ Clarity helps users journal their thoughts and track emotions while keeping all 
 | FL Framework | Flower (simulated in demo) |
 | Aggregation | FedAvg with DP |
 | Persistence | localStorage |
-| Hosting | Netlify |
-
-## 🚀 Deploy
-
-**Netlify (drag & drop):**
-
-1. Go to https://app.netlify.com/drop
-2. Drag the `clarity` folder onto the page
-3. Done!
-
-**Or via CLI:**
-```bash
-npm install -g netlify-cli
-netlify deploy --prod --dir=.
