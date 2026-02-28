@@ -1,10 +1,10 @@
-# 🌸 MindBloom — AI-Powered Mental Health Journal
+# 🌸 Clarity — AI-Powered Mental Health Journal
 
 **Privacy-first mental health journaling app powered by on-device AI and Federated Learning via Flower.**
 
 ## 🎯 What It Does
 
-MindBloom helps users journal their thoughts and track emotions while keeping all data on-device. An emotion classifier is trained locally using user-provided labels and improved globally through Federated Learning — no raw data ever leaves the device.
+Clarity helps users journal their thoughts and track emotions while keeping all data on-device. An emotion classifier is trained locally using user-provided labels and improved globally through Federated Learning — no raw data ever leaves the device.
 
 ## 🧠 The FL Pipeline
 
@@ -37,7 +37,7 @@ MindBloom helps users journal their thoughts and track emotions while keeping al
 ## 🛠 Tech Stack
 
 | Component | Technology |
-|---|---|
+|----------|-------------|
 | Frontend | Vanilla HTML/CSS/JS |
 | On-device ML | TinyBERT (simulated in demo) |
 | FL Framework | Flower (simulated in demo) |
@@ -48,36 +48,12 @@ MindBloom helps users journal their thoughts and track emotions while keeping al
 ## 🚀 Deploy
 
 **Netlify (drag & drop):**
-1. Go to [app.netlify.com/drop](https://app.netlify.com/drop)
-2. Drag the `mindbloom` folder onto the page
+
+1. Go to https://app.netlify.com/drop
+2. Drag the `clarity` folder onto the page
 3. Done!
 
 **Or via CLI:**
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod --dir=.
-```
-
-## 📱 Demo Flow for Hackathon
-
-1. Walk through onboarding (explains FL pipeline)
-2. Write a journal entry (show real-time emotion detection)
-3. Select emotion labels (show the annotation UX)
-4. Watch the FL training simulation
-5. Check the Insights dashboard
-6. Try the breathing exercises
-7. Show privacy settings (FL toggle, DP toggle, data export)
-
-## 🏗 Production Roadmap
-
-- [ ] Replace keyword detection with on-device TinyBERT via ONNX.js / TensorFlow.js
-- [ ] Integrate real Flower FL client (flower-js or React Native bridge)
-- [ ] Encrypted IndexedDB for entry storage
-- [ ] Push notifications for journaling reminders
-- [ ] PWA with offline support
-- [ ] Voice-to-text journaling
-- [ ] Weekly AI-generated wellness reports
-
-## 📄 License
-
-MIT
