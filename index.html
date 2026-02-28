@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MindBloom — AI Mental Health Journal</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ONBOARDING OVERLAY -->
+<div class="onboarding-overlay" id="onboarding">
+  <div class="onboarding-content">
+    <div class="onboarding-slides" id="onboardingSlides">
+      <!-- Slide 1 -->
+      <div class="onboarding-slide active" data-slide="0">
+        <div class="onboarding-icon">🌸</div>
+        <h1>Welcome to <span class="accent-text">MindBloom</span></h1>
+        <p>Your private AI-powered mental health companion. Journal your thoughts, track emotions, and grow — all while keeping your data safe on your device.</p>
+        <div class="onboarding-features">
+          <div class="ob-feature"><span>🔒</span> On-device AI processing</div>
+          <div class="ob-feature"><span>🌐</span> Federated Learning via Flower</div>
+          <div class="ob-feature"><span>🎨</span> Adaptive emotion theming</div>
+        </div>
+      </div>
+      <!-- Slide 2 -->
+      <div class="onboarding-slide" data-slide="1">
+        <div class="onboarding-icon">🧠</div>
+        <h1>How It <span class="accent-text">Works</span></h1>
+        <p>Write your journal entry, then tell us how you're feeling. Your emotion labels train a personal AI classifier — improved globally through Federated Learning without ever sharing your words.</p>
+        <div class="pipeline-visual">
+          <div class="pipe-step"><div class="pipe-num">1</div><span>Write</span></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-step"><div class="pipe-num">2</div><span>Label</span></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-step"><div class="pipe-num">3</div><span>Train</span></div>
+          <div class="pipe-arrow">→</div>
+          <div class="pipe-step"><div class="pipe-num">4</div><span>FL Sync</span></div>
+        </div>
+      </div>
+      <!-- Slide 3 -->
+      <div class="onboarding-slide" data-slide="2">
+        <div class="onboarding-icon">✨</div>
+        <h1>What's your <span class="accent-text">name</span>?</h1>
+        <p>We'll personalize your experience. Everything stays on your device.</p>
+        <input type="text" class="onboarding-input" id="onboardingName" placeholder="Enter your name" maxlength="20">
+      </div>
+    </div>
+    <div class="onboarding-nav">
+      <div class="onboarding-dots">
+        <span class="ob-dot active" data-dot="0"></span>
+        <span class="ob-dot" data-dot="1"></span>
+        <span class="ob-dot" data-dot="2"></span>
+      </div>
+      <button class="onboarding-btn" id="onboardingBtn" onclick="nextOnboardingSlide()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- THEME FLASH -->
+<div class="theme-flash" id="themeFlash"></div>
+
+<!-- MOOD ATMOSPHERE -->
+<div class="mood-atmosphere">
+  <div class="mood-orb"></div>
+  <div class="mood-orb"></div>
+  <div class="mood-orb"></div>
+</div>
+<div class="grain"></div>
+
+<!-- MAIN APP -->
+<div class="app" id="app" style="display:none;">
+
+  <!-- ============ SCREEN: JOURNAL (HOME) ============ -->
+  <div class="screen active" id="screen-journal">
+    <div class="status-bar">
+      <div class="on-device-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+        On-Device AI
+      </div>
+      <div class="fl-badge" id="flBadge">
+        <span class="dot"></span>
+        FL Synced
+      </div>
+    </div>
+
+    <div class="greeting-section">
+      <div class="time-greeting" id="timeGreeting"></div>
+      <h1>We're here for you, <span id="userName">Friend</span></h1>
+      <p class="subtitle" id="greetingSubtitle">What would you like to talk about today?</p>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-container">
+      <div class="avatar-wrapper" id="avatarWrapper">
+        <div class="avatar-ring"></div>
+        <div class="avatar" id="avatarMain">
+          <div class="avatar-face">
+            <div class="avatar-eyes">
+              <div class="avatar-eye"></div>
+              <div class="avatar-eye"></div>
+            </div>
+            <div class="avatar-mouth"></div>
+            <div class="avatar-cheeks">
+              <div class="avatar-cheek"></div>
+              <div class="avatar-cheek"></div>
+            </div>
+          </div>
+        </div>
+        <div class="avatar-particles">
+          <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar speech bubble -->
+    <div class="speech-bubble" id="speechBubble">
+      <span id="speechText">Tap me for a mindfulness tip! 💡</span>
+    </div>
+
+    <!-- Quick mood selector -->
+    <div class="mood-selector" id="moodSelector">
+      <button class="mood-btn active" data-mood="neutral" onclick="setMood('neutral')">
+        <span class="mood-emoji">😌</span><span class="mood-label">Calm</span>
+      </button>
+      <button class="mood-btn" data-mood="happy" onclick="setMood('happy')">
+        <span class="mood-emoji">😊</span><span class="mood-label">Happy</span>
+      </button>
+      <button class="mood-btn" data-mood="sad" onclick="setMood('sad')">
+        <span class="mood-emoji">😔</span><span class="mood-label">Sad</span>
+      </button>
+      <button class="mood-btn" data-mood="anxious" onclick="setMood('anxious')">
+        <span class="mood-emoji">😰</span><span class="mood-label">Anxious</span>
+      </button>
+      <button class="mood-btn" data-mood="grateful" onclick="setMood('grateful')">
+        <span class="mood-emoji">🙏</span><span class="mood-label">Grateful</span>
+      </button>
+    </div>
+
+    <!-- Insights row -->
+    <div class="insights-row">
+      <div class="insight-card">
+        <div class="insight-value" id="streakCount">0</div>
+        <div class="insight-label">Day Streak</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-value" id="entryCount">0</div>
+        <div class="insight-label">Entries</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-value" id="moodTrend">—</div>
+        <div class="insight-label">Mood Trend</div>
+      </div>
+    </div>
+
+    <!-- Emotion analysis bar -->
+    <div class="analysis-bar" id="analysisBar">
+      <div class="analysis-icon">🧠</div>
+      <div class="analysis-text"><strong>On-device analysis:</strong> <span id="analysisResult">Detecting emotion...</span></div>
+    </div>
+
+    <!-- Journal card -->
+    <div class="journal-section">
+      <div class="journal-card">
+        <div class="journal-header">
+          <h2>Today's Journal</h2>
+          <span class="date-pill" id="datePill"></span>
+        </div>
+        <div class="journal-prompt" id="journalPrompt">"What's one thing on your mind right now?"</div>
+        <div class="journal-input-wrap">
+          <textarea class="journal-textarea" id="journalInput" placeholder="Start writing... your thoughts are safe here."></textarea>
+        </div>
+        <div class="word-count"><span id="wordCount">0</span> words</div>
+        <div class="journal-actions">
+          <div class="action-left">
+            <button class="action-icon-btn" onclick="showToast('🎙 Voice input coming soon!')">🎙</button>
+            <button class="action-icon-btn" onclick="showToast('📷 Image journaling coming soon!')">📷</button>
+            <button class="action-icon-btn" onclick="insertPromptSuggestion()">💡</button>
+          </div>
+          <button class="save-btn" id="saveBtn" onclick="startLabelingFlow()">Continue →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: EMOTION LABELING ============ -->
+  <div class="screen" id="screen-labeling">
+    <div class="labeling-screen">
+      <button class="back-btn" onclick="switchScreen('journal')">← Back</button>
+      <div class="labeling-header">
+        <div class="labeling-icon">🌿</div>
+        <h2>Take a moment to reflect</h2>
+        <p>Which emotions resonate with what you wrote? Pick up to 2.</p>
+      </div>
+      <div class="emotion-grid" id="emotionGrid">
+        <button class="emotion-chip" data-emotion="happy" onclick="toggleEmotion(this)"><span>😊</span>Happy</button>
+        <button class="emotion-chip" data-emotion="sad" onclick="toggleEmotion(this)"><span>😔</span>Sad</button>
+        <button class="emotion-chip" data-emotion="anxious" onclick="toggleEmotion(this)"><span>😰</span>Anxious</button>
+        <button class="emotion-chip" data-emotion="angry" onclick="toggleEmotion(this)"><span>😤</span>Angry</button>
+        <button class="emotion-chip" data-emotion="grateful" onclick="toggleEmotion(this)"><span>🙏</span>Grateful</button>
+        <button class="emotion-chip" data-emotion="hopeful" onclick="toggleEmotion(this)"><span>🌱</span>Hopeful</button>
+        <button class="emotion-chip" data-emotion="lonely" onclick="toggleEmotion(this)"><span>🫂</span>Lonely</button>
+        <button class="emotion-chip" data-emotion="overwhelmed" onclick="toggleEmotion(this)"><span>🌊</span>Overwhelmed</button>
+        <button class="emotion-chip" data-emotion="calm" onclick="toggleEmotion(this)"><span>🧘</span>Calm</button>
+        <button class="emotion-chip" data-emotion="confused" onclick="toggleEmotion(this)"><span>🤔</span>Confused</button>
+      </div>
+      <div class="labeling-preview">
+        <div class="preview-label">Your entry preview:</div>
+        <div class="preview-text" id="labelingPreview"></div>
+      </div>
+      <div class="labeling-actions">
+        <button class="skip-btn" onclick="saveEntry([])">Skip labeling</button>
+        <button class="save-btn" id="labelSaveBtn" onclick="saveEntry(getSelectedEmotions())">Save & Train 🧠</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: FL TRAINING SIMULATION ============ -->
+  <div class="screen" id="screen-training">
+    <div class="training-screen">
+      <div class="training-header">
+        <h2>Training Your Model</h2>
+        <p>On-device learning in progress...</p>
+      </div>
+      <div class="training-visual">
+        <div class="training-circle" id="trainingCircle">
+          <svg viewBox="0 0 120 120" class="training-ring-svg">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="6" stroke-dasharray="327" stroke-dashoffset="327" stroke-linecap="round" id="trainingProgress"/>
+          </svg>
+          <div class="training-percent" id="trainingPercent">0%</div>
+        </div>
+      </div>
+      <div class="training-steps" id="trainingSteps">
+        <div class="training-step" id="step-tokenize"><span class="step-icon">⏳</span>Tokenizing journal text...</div>
+        <div class="training-step" id="step-forward"><span class="step-icon">⏳</span>Forward pass through classifier...</div>
+        <div class="training-step" id="step-loss"><span class="step-icon">⏳</span>Computing multi-label BCE loss...</div>
+        <div class="training-step" id="step-backward"><span class="step-icon">⏳</span>Backpropagation &amp; local SGD step...</div>
+        <div class="training-step" id="step-dp"><span class="step-icon">⏳</span>Applying differential privacy noise...</div>
+        <div class="training-step" id="step-fl"><span class="step-icon">⏳</span>Sending weight delta to Flower server...</div>
+        <div class="training-step" id="step-agg"><span class="step-icon">⏳</span>FedAvg aggregation complete</div>
+        <div class="training-step" id="step-done"><span class="step-icon">⏳</span>Model updated locally ✓</div>
+      </div>
+      <div class="training-stats" id="trainingStats" style="display:none;">
+        <div class="t-stat"><div class="t-stat-val" id="tLoss">—</div><div class="t-stat-label">Loss</div></div>
+        <div class="t-stat"><div class="t-stat-val" id="tAcc">—</div><div class="t-stat-label">Accuracy</div></div>
+        <div class="t-stat"><div class="t-stat-val" id="tRound">—</div><div class="t-stat-label">FL Round</div></div>
+        <div class="t-stat"><div class="t-stat-val" id="tPeers">—</div><div class="t-stat-label">Peers</div></div>
+      </div>
+      <button class="save-btn training-done-btn" id="trainingDoneBtn" style="display:none;" onclick="finishTraining()">Done — View Insights →</button>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: INSIGHTS / ANALYTICS ============ -->
+  <div class="screen" id="screen-insights">
+    <div class="insights-screen">
+      <div class="screen-header">
+        <h2>Your Insights</h2>
+        <p>Patterns from your journal entries</p>
+      </div>
+
+      <!-- Emotion distribution chart -->
+      <div class="chart-card">
+        <h3>Emotion Distribution</h3>
+        <div class="emotion-bars" id="emotionBars"></div>
+      </div>
+
+      <!-- Mood over time -->
+      <div class="chart-card">
+        <h3>Mood Timeline</h3>
+        <div class="mood-timeline" id="moodTimeline"></div>
+      </div>
+
+      <!-- FL Model stats -->
+      <div class="chart-card fl-card">
+        <h3>🌸 Federated Learning</h3>
+        <p class="fl-desc">Your personal model improves the global classifier via Flower FL — no raw data shared.</p>
+        <div class="fl-stats-grid">
+          <div class="fl-stat-item">
+            <div class="fl-stat-value" id="flPeers">1,247</div>
+            <div class="fl-stat-label">Active Peers</div>
+          </div>
+          <div class="fl-stat-item">
+            <div class="fl-stat-value" id="flRound">R48</div>
+            <div class="fl-stat-label">Current Round</div>
+          </div>
+          <div class="fl-stat-item">
+            <div class="fl-stat-value" id="flAccuracy">94.2%</div>
+            <div class="fl-stat-label">Global Accuracy</div>
+          </div>
+          <div class="fl-stat-item">
+            <div class="fl-stat-value" id="flLocalSamples">0</div>
+            <div class="fl-stat-label">Local Samples</div>
+          </div>
+        </div>
+        <div class="fl-architecture">
+          <div class="arch-label">Architecture</div>
+          <div class="arch-diagram">
+            <div class="arch-node client">📱 Client<br><small>TinyBERT + MLC Head</small></div>
+            <div class="arch-arrow">⇄ ΔW</div>
+            <div class="arch-node server">🌐 Flower Server<br><small>FedAvg + DP</small></div>
+            <div class="arch-arrow">⇄ ΔW</div>
+            <div class="arch-node client">📱 1,247 Peers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Past entries -->
+      <div class="chart-card">
+        <h3>Recent Entries</h3>
+        <div class="entries-list" id="entriesList">
+          <div class="empty-state">No entries yet. Start journaling! 🌱</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: BREATHE ============ -->
+  <div class="screen" id="screen-breathe">
+    <div class="breathe-screen">
+      <div class="screen-header">
+        <h2>Breathe</h2>
+        <p>Take a moment to center yourself</p>
+      </div>
+      <div class="breathe-exercise-selector">
+        <button class="breathe-type active" data-type="478" onclick="selectBreathType(this)">4-7-8</button>
+        <button class="breathe-type" data-type="box" onclick="selectBreathType(this)">Box</button>
+        <button class="breathe-type" data-type="calm" onclick="selectBreathType(this)">Calm</button>
+      </div>
+      <div class="breathe-container">
+        <div class="breathe-circle" id="breatheCircle">
+          <div class="breathe-inner">
+            <div class="breathe-text" id="breatheText">Tap to start</div>
+            <div class="breathe-timer" id="breatheTimer"></div>
+          </div>
+        </div>
+        <div class="breathe-guide" id="breatheGuide">
+          <span id="breatheInstruction">Press the circle to begin</span>
+        </div>
+      </div>
+      <div class="breathe-counter">
+        <span>Cycles completed: </span><strong id="breatheCycles">0</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SCREEN: SETTINGS ============ -->
+  <div class="screen" id="screen-settings">
+    <div class="settings-screen">
+      <div class="screen-header">
+        <h2>Settings</h2>
+        <p>Customize your experience</p>
+      </div>
+      <div class="settings-group">
+        <h3>Profile</h3>
+        <div class="setting-item">
+          <label>Display Name</label>
+          <input type="text" class="setting-input" id="settingName" placeholder="Your name" maxlength="20">
+        </div>
+      </div>
+      <div class="settings-group">
+        <h3>Privacy & AI</h3>
+        <div class="setting-item toggle-item">
+          <div><label>Federated Learning</label><small>Share model updates (never raw data)</small></div>
+          <button class="toggle active" id="toggleFL" onclick="toggleSetting(this)"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="setting-item toggle-item">
+          <div><label>On-device Emotion Detection</label><small>Analyze text as you type</small></div>
+          <button class="toggle active" id="toggleDetection" onclick="toggleSetting(this)"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="setting-item toggle-item">
+          <div><label>Adaptive Theme</label><small>UI colors change with your mood</small></div>
+          <button class="toggle active" id="toggleTheme" onclick="toggleSetting(this)"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="setting-item toggle-item">
+          <div><label>Differential Privacy</label><small>Add noise to FL weight updates</small></div>
+          <button class="toggle active" id="toggleDP" onclick="toggleSetting(this)"><span class="toggle-knob"></span></button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <h3>Data</h3>
+        <div class="setting-item">
+          <button class="setting-action-btn" onclick="exportData()">📦 Export My Data</button>
+        </div>
+        <div class="setting-item">
+          <button class="setting-action-btn danger" onclick="clearAllData()">🗑 Clear All Data</button>
+        </div>
+      </div>
+      <div class="settings-group">
+        <h3>About MindBloom</h3>
+        <div class="about-text">
+          <p>MindBloom is a privacy-first mental health journaling app powered by on-device AI and Federated Learning via Flower.</p>
+          <p>Your journal entries never leave your device. Only model weight updates are shared to improve the global emotion classifier.</p>
+          <div class="tech-stack">
+            <span class="tech-tag">Flower FL</span>
+            <span class="tech-tag">TinyBERT</span>
+            <span class="tech-tag">FedAvg</span>
+            <span class="tech-tag">Diff. Privacy</span>
+            <span class="tech-tag">On-Device</span>
+            <span class="tech-tag">Multi-Label</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BOTTOM NAV ============ -->
+  <div class="bottom-nav">
+    <button class="nav-item active" data-screen="journal" onclick="switchScreen('journal')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+      <span>Journal</span>
+    </button>
+    <button class="nav-item" data-screen="insights" onclick="switchScreen('insights')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>
+      <span>Insights</span>
+    </button>
+    <button class="nav-item" data-screen="breathe" onclick="switchScreen('breathe')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+      <span>Breathe</span>
+    </button>
+    <button class="nav-item" data-screen="settings" onclick="switchScreen('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.32 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
