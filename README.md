@@ -2,6 +2,12 @@
 
 **Privacy-first mental health journaling app powered by on-device AI and Federated Learning via Flower.**
 
+## Includes: 
+
+<ol>
+  <li>Clarity Web Interface: For text analysis, voice-to-text feature, nearest GP locator and Agentic Email Management.</li>
+  <li>Mental Health Analyzer and Classifier integrating federated learning for user data privacy.</li>
+</ol>
 ## 🎯 What It Does
 
 Clarity helps users journal their thoughts and track emotions while keeping all data on-device. An emotion classifier is trained locally using user-provided labels and improved globally through Federated Learning — no raw data ever leaves the device.
